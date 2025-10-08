@@ -1,151 +1,124 @@
-import React, { useState } from "react";
-const mockApps = [
-  {
-    id: 1,
-    name: "Forest: Focus For Productivity",
-    downloads: "9M",
-    rating: 5,
-    size: "258 MB",
-  },
-  {
-    id: 2,
-    name: "Forest: Focus For Productivity",
-    downloads: "9M",
-    rating: 5,
-    size: "258 MB",
-  },
-  {
-    id: 3,
-    name: "Forest: Focus For Productivity",
-    downloads: "9M",
-    rating: 5,
-    size: "258 MB",
-  },
-  {
-    id: 4,
-    name: "Calendar: Time Management",
-    downloads: "15M",
-    rating: 4.8,
-    size: "180 MB",
-  },
-];
+import { Download, Star } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
 export default function Installation() {
-  const starColor = "text-yellow-500";
-  const [app, setApp] = useState(mockApps);
-  const [sort, setSort] = useState("size");
+  const [installedApps, setInstalledApps] = useState([]);
+  const [allApps, setAllApps] = useState([]);
+  const [sortOrder, setSortOrder] = useState("high"); // high or low
+
+  useEffect(() => {
+    const localStorageJson = localStorage.getItem("installedApp");
+    const installedIds = localStorageJson ? JSON.parse(localStorageJson) : [];
+    setInstalledApps(installedIds);
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch("/data.json");
+        const resData = await res.json();
+        setAllApps(resData);
+      } catch (error) {
+        console.error("Fetch Error:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // Filter installed apps & sort by downloads
+  const filteredApps = allApps
+    .filter((app) => installedApps.includes(app.id))
+    .sort((a, b) => {
+      const convertDownloads = (d) => {
+        if (d.toUpperCase().includes("M")) return parseFloat(d) * 1_000_000;
+        if (d.toUpperCase().includes("K")) return parseFloat(d) * 1_000;
+        return parseInt(d);
+      };
+      return sortOrder === "high"
+        ? convertDownloads(b.downloads) - convertDownloads(a.downloads)
+        : convertDownloads(a.downloads) - convertDownloads(b.downloads);
+    });
+
+  const handleUninstall = (app) => {
+    const updated = installedApps.filter((id) => id !== app.id);
+    localStorage.setItem("installedApp", JSON.stringify(updated));
+    setInstalledApps(updated);
+    toast(`${app.title} Uninstalled`);
+  };
+
   return (
-    <div className="min-h-screen  p-4 sm:p-8 flex justify-center bg-gray-100">
-      <div className="w-full max-w-5xl  p-6 sm:p-10 ">
-        {/* Header Section */}
+    <div className="min-h-screen p-4 sm:p-8 flex justify-center bg-gray-100">
+      <div className="w-full max-w-5xl p-6 sm:p-10">
         <header className="text-center mb-8 sm:mb-12">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-800 tracking-tight">
             Your Installed Apps
           </h1>
           <p className="mt-2 text-base sm:text-lg text-gray-500 font-light">
-            Explore All Trending Apps on the Market developed by us
+            Explore all apps you have installed from our marketplace.
           </p>
         </header>
 
-        {/* Controls Bar */}
-        <div className="flex justify-between items-center mb-6 border-b pb-4 border-gray-100">
-          <span className="text-base font-medium text-gray-700">
-            {app.length} Apps Found
-          </span>
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+          <p className="font-extrabold px-2 py-2">
+            {filteredApps.length} Apps Installed
+          </p>
 
-          {/* Sort Dropdown */}
-          <div className="relative inline-block text-left">
+          <div className="relative inline-block text-left mt-2 sm:mt-0">
             <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              className="
-                                appearance-none bg-white border border-gray-300 text-gray-700 
-                                py-2 pl-4 pr-10 rounded-lg shadow-sm focus:outline-none 
-                                focus:ring-2 focus:ring-teal-500 focus:border-teal-500 
-                                cursor-pointer text-sm font-medium
-                            "
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236B7280'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd' /%3E%3C/svg%3E")`,
-                backgroundPosition: "right 0.5rem center",
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "1.5em 1.5em",
-              }}
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              className="appearance-none bg-white border border-gray-300 text-gray-700 py-2 pl-4 pr-10 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 cursor-pointer text-sm"
             >
-              <option value="size">Sort By Size</option>
-              <option value="name">Sort By Name</option>
-              <option value="rating">Sort By Rating</option>
+              <option value="high">High - Low</option>
+              <option value="low">Low - High</option>
             </select>
           </div>
         </div>
 
-        {/* Apps List */}
-        <div className="space-y-1">
-          <div className="flex items-center justify-between p-4 sm:p-5 border-b last:border-b-0 transition duration-150 ease-in-out bg-white hover:bg-gray-50 rounded-md">
-            {/* Left section: App Icon, Name, and Stats */}
-            <div className="flex items-center space-x-4">
-              {/* App Icon Placeholder */}
-              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-200 rounded-lg flex-shrink-0">
-                {/* Could place an actual icon/image here */}
-              </div>
-
-              {/* App Details */}
-              <div className="flex flex-col">
-                <span className="text-base sm:text-lg font-semibold text-gray-800">
-                  {app.name}
-                </span>
-                <div className="flex items-center text-sm text-gray-500 mt-1 space-x-3">
-                  {/* Downloads */}
-                  <span className="flex items-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 mr-1 text-teal-500"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 11.586V3a1 1 0 112 0v8.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                    <span className="font-medium text-teal-600">
+        <div className="space-y-4">
+          {filteredApps.length === 0 && (
+            <p className="text-center text-gray-500">No apps installed yet.</p>
+          )}
+          {filteredApps.map((app) => (
+            <div
+              key={app.id}
+              className="flex flex-col md:flex-row items-center justify-between p-4 sm:p-5 bg-white hover:bg-gray-50 rounded-lg shadow-sm transition duration-150 ease-in-out"
+            >
+              <div className="flex items-center space-x-4 w-full md:w-auto">
+                <img
+                  src={app.image}
+                  alt={app.title}
+                  className="w-16 h-16 md:w-20 md:h-20 object-cover rounded-lg flex-shrink-0"
+                />
+                <div className="flex flex-col text-center md:text-left">
+                  <span className="text-base sm:text-lg font-semibold text-gray-800">
+                    {app.title}
+                  </span>
+                  <div className="flex flex-wrap items-center text-sm text-gray-500 mt-1 gap-4">
+                    <span className="flex items-center gap-1 text-green-500 font-bold">
+                      <Download className="h-4 w-4" />
                       {app.downloads}
                     </span>
-                  </span>
-
-                  {/* Rating */}
-                  <span className="flex items-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className={`h-4 w-4 mr-1 ${starColor}`}
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.62-.921 1.92 0l2.455 7.554 7.927.001c.969 0 1.371 1.24.588 1.81l-6.427 4.673 2.455 7.554c.3.921-.755 1.688-1.542 1.116L10 17.58l-6.427 4.673c-.787.572-1.842-.195-1.542-1.116l2.455-7.554L.078 12.292c-.783-.57-.381-1.81.588-1.81l7.927-.001L9.049 2.927z" />
-                    </svg>
-                    <span className="text-gray-600 font-medium">
-                      {app.rating}
+                    <span className="flex items-center gap-1 text-orange-500 font-bold">
+                      <Star className="h-4 w-4" />
+                      {app.ratingAvg}
                     </span>
-                  </span>
-
-                  {/* Size */}
-                  <span className="text-gray-600 font-medium">{app.size}</span>
+                    <span className="text-gray-600 font-medium">
+                      {app.size} MB
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Right section: Uninstall Button */}
-            <button
-              className="
-                    bg-teal-500 text-white font-medium px-4 py-2 rounded-lg 
-                    shadow-md hover:bg-teal-600 active:bg-teal-700 
-                    transition duration-150 ease-in-out transform hover:scale-105 
-                    whitespace-nowrap text-sm
-                "
-              onClick={() => console.log(`Uninstalling ${app.name}`)}
-            >
-              Uninstall
-            </button>
-          </div>
+              <button
+                className="bg-green-500 cursor-pointer text-white font-medium px-4 py-2 rounded-lg shadow-md hover:bg-red-600 active:bg-red-700 transition duration-150 ease-in-out mt-4 md:mt-0 text-sm"
+                onClick={() => handleUninstall(app)}
+              >
+                Uninstall
+              </button>
+            </div>
+          ))}
         </div>
       </div>
     </div>

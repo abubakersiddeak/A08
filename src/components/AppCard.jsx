@@ -3,7 +3,6 @@ import React from "react";
 import { Link } from "react-router";
 
 export default function AppCard({ data }) {
-  console.log(data);
   return (
     <Link to={`/appDetils/${data.id}`} className="w-full">
       <div className="card bg-base-100 shadow-sm relative p-2 flex flex-col h-full">

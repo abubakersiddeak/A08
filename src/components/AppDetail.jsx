@@ -1,20 +1,27 @@
 import { Download, Star, ThumbsUp } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"; // react-router-dom ব্যবহার করতে হবে
+import { useParams } from "react-router-dom";
 import {
   BarChart,
   Bar,
   XAxis,
   YAxis,
   Tooltip,
-  CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
+import { toast } from "react-toastify";
 
 export default function AppDetail() {
   const { id } = useParams();
   const intId = parseInt(id);
   const [data, setData] = useState([]);
+  const [localStorageData, setLocalStorageData] = useState([]);
+
+  useEffect(() => {
+    const localStorageJson = localStorage.getItem("installedApp");
+    const installedApps = localStorageJson ? JSON.parse(localStorageJson) : [];
+    setLocalStorageData(installedApps);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,21 +33,28 @@ export default function AppDetail() {
         console.error("Fetch Error:", error);
       }
     };
-
     fetchData();
   }, []);
 
-  const filterdataArr = data.filter((d) => d.id === intId);
-  const filterData = filterdataArr[0];
+  const filterData = data.find((d) => d.id === intId);
 
   if (!filterData) {
     return <div className="p-10">Loading...</div>;
   }
 
-  const chartData = filterData.ratings;
-  const sortedChartData = [...chartData].sort(
+  const isInstalled = localStorageData.includes(filterData.id);
+
+  const sortedChartData = [...filterData.ratings].sort(
     (a, b) => parseInt(b.name) - parseInt(a.name)
   );
+
+  const handleDownloadClick = (filterData) => {
+    if (isInstalled) return;
+    toast("Installing...");
+    const installedApps = [...localStorageData, filterData.id];
+    localStorage.setItem("installedApp", JSON.stringify(installedApps));
+    setLocalStorageData(installedApps);
+  };
 
   return (
     <div className="p-10 relative">
@@ -61,7 +75,7 @@ export default function AppDetail() {
 
           <hr className="text-gray-300 my-2" />
 
-          <div className="flex gap-4 md:gap-8 xl:gap-20">
+          <div className="flex gap-4 md:gap-8 xl:gap-20 md:flex-row flex-col">
             <div className="flex flex-col gap-1 items-start">
               <Download className="text-green-500" />
               <div>Downloads</div>
@@ -79,8 +93,16 @@ export default function AppDetail() {
             </div>
           </div>
 
-          <button className="btn text-white bg-green-400 mt-4 w-max px-4 py-2">
-            Install Now ({filterData.size} MB)
+          <button
+            onClick={() => handleDownloadClick(filterData)}
+            disabled={isInstalled}
+            className={`btn text-white mt-4 w-max px-4 py-2 ${
+              isInstalled ? "bg-gray-600 cursor-not-allowed" : "bg-green-400"
+            }`}
+          >
+            {isInstalled
+              ? "Already Installed"
+              : `Install Now (${filterData.size} MB)`}
           </button>
         </div>
       </div>
@@ -88,24 +110,23 @@ export default function AppDetail() {
       <hr className="text-gray-300 my-4" />
 
       <div style={{ width: "100%", height: 300 }}>
-        <p className="font-bold pl-7">Reatings</p>
+        <p className="font-bold pl-7">Ratings</p>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
             data={sortedChartData}
             layout="vertical"
-            margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+            margin={{ top: 20, right: 20, left: 0, bottom: 20 }}
           >
             <YAxis type="category" dataKey="name" stroke="#627382" />
-
             <XAxis type="number" stroke="#627382" />
-
             <Tooltip />
-
             <Bar dataKey="count" fill="#FF8811" barSize={20} />
           </BarChart>
         </ResponsiveContainer>
       </div>
+
       <hr className="text-gray-300 my-4" />
+
       <div>
         <p className="font-bold">Description</p>
         <p className="text-gray-500">{filterData.description}</p>
