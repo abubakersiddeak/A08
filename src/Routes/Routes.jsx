@@ -7,6 +7,7 @@ import Hero from "../components/Hero";
 import AllApps from "../components/AllApps";
 import Installation from "../components/Installation";
 import AppDetail from "../components/AppDetail";
+import ErrorAppPage from "../pages/ErrorPage/ErrorAppPage ";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -29,6 +30,7 @@ export const router = createBrowserRouter([
       {
         path: "/appDetils/:id",
         Component: AppDetail,
+        errorElement: <ErrorAppPage />,
       },
     ],
   },

@@ -22,14 +22,14 @@ export default function ErrorPage() {
         <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
           <Link
             to="/"
-            className="px-6 py-3 sm:px-8 sm:py-3.5 text-sm sm:text-lg font-semibold text-white bg-gradient-to-r from-indigo-600 to-blue-500 rounded-full shadow-md hover:shadow-lg hover:from-indigo-700 hover:to-blue-600 transition-all duration-300 transform hover:-translate-y-0.5"
+            className="px-6 py-3 sm:px-8 sm:py-3.5 text-sm sm:text-lg font-semibold text-white bg-gradient-to-r from-indigo-600 to-blue-500 rounded-lg shadow-md hover:shadow-lg hover:from-indigo-700 hover:to-blue-600 transition-all duration-300 transform hover:-translate-y-0.5"
           >
             ⬅ Go Home
           </Link>
 
           <Link
             to="/support"
-            className="px-6 py-3 sm:px-8 sm:py-3.5 text-sm sm:text-lg font-semibold text-indigo-600 border border-indigo-200 bg-indigo-50 rounded-full hover:bg-indigo-100 hover:text-indigo-700 transition-all duration-300"
+            className="px-6 py-3 sm:px-8 sm:py-3.5 text-sm sm:text-lg font-semibold text-indigo-600 border border-indigo-200 bg-indigo-50 rounded-lg hover:bg-indigo-100 hover:text-indigo-700 transition-all duration-300"
           >
             🛠 Report Issue
           </Link>
