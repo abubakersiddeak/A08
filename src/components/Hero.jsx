@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import bennerImg from "../assets/hero.png";
 import googleplayIcon from "../assets/google-play_6124997.png";
 import appstoreIcon from "../assets/app-store_5977575.png";
@@ -6,6 +6,21 @@ import TrustSection from "./TrustSection";
 import TrendingApps from "./TrendingApps";
 
 export default function Hero() {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await fetch("/data.json");
+        const resData = await res.json();
+        setData(resData);
+      } catch (error) {
+        console.error("Fetch Error:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
       <div className="mt-10 mx-auto flex flex-col gap-4 justify-center items-center">
@@ -36,7 +51,7 @@ export default function Hero() {
         <img src={bennerImg} alt="banner-img" className="w-75 md:w-155"></img>
       </div>
       <TrustSection />
-      <TrendingApps />
+      <TrendingApps data={data} />
     </>
   );
 }

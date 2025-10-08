@@ -1,7 +1,8 @@
 import React from "react";
 import AppCard from "./AppCard";
+import { Link } from "react-router";
 
-export default function TrendingApps() {
+export default function TrendingApps({ data }) {
   return (
     <div className="flex flex-col items-center p-6">
       <div className="text-center">
@@ -12,22 +13,16 @@ export default function TrendingApps() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-4 mt-15">
-        <AppCard />
-        <AppCard />
-        <AppCard />
-        <AppCard />
-        <AppCard />
-        <AppCard />
-        <AppCard />
-        <AppCard />
-        <AppCard />
-        <AppCard />
-        <AppCard />
-        <AppCard />
+        {data.slice(0, 8).map((d) => (
+          <AppCard key={d.id} data={d} />
+        ))}
       </div>
-      <button className="btn bg-gradient-to-tr to-[#632EE3] from-[#9F62F2] text-white mt-10">
+      <Link
+        to="/apps"
+        className="btn bg-gradient-to-tr to-[#632EE3] from-[#9F62F2] text-white mt-10"
+      >
         Show All
-      </button>
+      </Link>
     </div>
   );
 }
