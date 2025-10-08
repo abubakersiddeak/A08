@@ -3,8 +3,10 @@ import AppCard from "./AppCard";
 
 export default function AllApps() {
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -13,6 +15,7 @@ export default function AllApps() {
         const resData = await res.json();
         console.log("Fetched data:", resData);
         setData(resData);
+        setFilteredData(resData);
         setLoading(false);
       } catch (error) {
         console.error("Fetch Error:", error);
@@ -22,15 +25,22 @@ export default function AllApps() {
   }, []);
 
   const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
+    const value = event.target.value;
+    setSearchTerm(value);
+    setSearchLoading(true);
 
-  const filteredData =
-    searchTerm === ""
-      ? data
-      : data.filter((app) =>
-          app.title.toLowerCase().includes(searchTerm.toLowerCase())
+    setTimeout(() => {
+      if (value === "") {
+        setFilteredData(data);
+      } else {
+        const result = data.filter((app) =>
+          app.title.toLowerCase().includes(value.toLowerCase())
         );
+        setFilteredData(result);
+      }
+      setSearchLoading(false);
+    }, 500);
+  };
 
   if (loading) {
     return (
@@ -52,7 +62,7 @@ export default function AllApps() {
       <div className="flex flex-col gap-2">
         <div className="flex justify-between items-center">
           <span className="font-bold">({filteredData.length}) Apps Found</span>
-          <label className="input">
+          <label className="input flex items-center gap-2 border rounded-md px-2 py-1">
             <svg
               className="h-[1em] opacity-50"
               xmlns="http://www.w3.org/2000/svg"
@@ -75,17 +85,26 @@ export default function AllApps() {
               placeholder="Search Apps"
               value={searchTerm}
               onChange={handleSearchChange}
+              className="outline-none"
             />
           </label>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 mt-4 gap-4">
-          {filteredData.length > 0 ? (
-            filteredData.map((d) => <AppCard key={d.id} data={d} />)
-          ) : (
-            <p className="text-center text-3xl font-extrabold">No apps found</p>
-          )}
-        </div>
+        {searchLoading ? (
+          <div className="flex justify-center items-center mt-10">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-b-4 border-purple-600"></div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 mt-4 gap-4">
+            {filteredData.length > 0 ? (
+              filteredData.map((d) => <AppCard key={d.id} data={d} />)
+            ) : (
+              <p className="text-center text-3xl font-extrabold">
+                No apps found
+              </p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

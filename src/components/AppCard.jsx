@@ -20,11 +20,11 @@ export default function AppCard({ data }) {
           </h2>
 
           <div className="card-actions justify-between mt-auto flex flex-wrap gap-2">
-            <div className="badge bg-[#F1F5E8] text-green-500 py-2 px-3 flex items-center gap-2 text-sm sm:text-base">
+            <div className="badge bg-[#F1F5E8] text-green-500 py-4 px-3 flex items-center gap-2 text-sm sm:text-base">
               <Download /> <span className="inter">{data.downloads}</span>
             </div>
 
-            <div className="badge bg-[#FFF0E1] text-orange-500 py-2 px-3 flex items-center gap-2 text-sm sm:text-base">
+            <div className="badge bg-[#FFF0E1] text-orange-500 py-4 px-3 flex items-center gap-2 text-sm sm:text-base">
               <Star fill="orange" />{" "}
               <span className="inter">{data.ratingAvg}</span>
             </div>
