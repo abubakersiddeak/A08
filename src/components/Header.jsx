@@ -1,6 +1,5 @@
 import React from "react";
-
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logoPng from "../assets/logo.png";
 import { Github } from "lucide-react";
 
@@ -10,6 +9,8 @@ export default function Header() {
     { name: "Apps", path: "/apps" },
     { name: "Installation", path: "/installation" },
   ];
+
+  const location = useLocation(); // current path
 
   return (
     <div className="navbar bg-base-100 shadow-sm">
@@ -23,13 +24,12 @@ export default function Header() {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              {" "}
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
                 d="M4 6h16M4 12h8m-8 6h16"
-              />{" "}
+              />
             </svg>
           </div>
           <ul
@@ -37,7 +37,18 @@ export default function Header() {
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
           >
             {links.map((l) => (
-              <Link to={l.path}>{l.name}</Link>
+              <li key={l.path}>
+                <Link
+                  to={l.path}
+                  className={
+                    location.pathname === l.path
+                      ? "text-purple-600 font-bold"
+                      : ""
+                  }
+                >
+                  {l.name}
+                </Link>
+              </li>
             ))}
           </ul>
         </div>
@@ -46,12 +57,24 @@ export default function Header() {
           <span>HERO.IO</span>
         </Link>
       </div>
+
       <div className="navbar-center hidden lg:flex gap-4">
         {links.map((l) => (
-          <Link to={l.path}>{l.name}</Link>
+          <Link
+            key={l.path}
+            to={l.path}
+            className={
+              location.pathname === l.path
+                ? "text-purple-600 font-bold border-b-2 border-purple-600"
+                : "text-gray-700"
+            }
+          >
+            {l.name}
+          </Link>
         ))}
       </div>
-      <div className="navbar-end ">
+
+      <div className="navbar-end">
         <Link
           to="https://github.com/abubakersiddeak"
           className="btn bg-gradient-to-tr to-[#632EE3] from-[#9F62F2] text-white"

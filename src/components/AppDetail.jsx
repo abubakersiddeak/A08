@@ -16,6 +16,7 @@ export default function AppDetail() {
   const intId = parseInt(id);
   const [data, setData] = useState([]);
   const [localStorageData, setLocalStorageData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const localStorageJson = localStorage.getItem("installedApp");
@@ -29,6 +30,7 @@ export default function AppDetail() {
         const res = await fetch("/data.json");
         const resData = await res.json();
         setData(resData);
+        setLoading(false);
       } catch (error) {
         console.error("Fetch Error:", error);
       }
@@ -38,8 +40,12 @@ export default function AppDetail() {
 
   const filterData = data.find((d) => d.id === intId);
 
-  if (!filterData) {
-    return <div className="p-10">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-600"></div>
+      </div>
+    );
   }
 
   const isInstalled = localStorageData.includes(filterData.id);

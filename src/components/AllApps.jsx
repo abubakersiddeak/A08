@@ -4,6 +4,7 @@ import AppCard from "./AppCard";
 export default function AllApps() {
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -12,6 +13,7 @@ export default function AllApps() {
         const resData = await res.json();
         console.log("Fetched data:", resData);
         setData(resData);
+        setLoading(false);
       } catch (error) {
         console.error("Fetch Error:", error);
       }
@@ -29,6 +31,14 @@ export default function AllApps() {
       : data.filter((app) =>
           app.title.toLowerCase().includes(searchTerm.toLowerCase())
         );
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 p-10">

@@ -3,9 +3,10 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Installation() {
+  const [loading, setLoading] = useState(true);
   const [installedApps, setInstalledApps] = useState([]);
   const [allApps, setAllApps] = useState([]);
-  const [sortOrder, setSortOrder] = useState("high"); // high or low
+  const [sortOrder, setSortOrder] = useState("high");
 
   useEffect(() => {
     const localStorageJson = localStorage.getItem("installedApp");
@@ -18,6 +19,7 @@ export default function Installation() {
       try {
         const res = await fetch("/data.json");
         const resData = await res.json();
+        setLoading(false);
         setAllApps(resData);
       } catch (error) {
         console.error("Fetch Error:", error);
@@ -46,6 +48,14 @@ export default function Installation() {
     setInstalledApps(updated);
     toast(`${app.title} Uninstalled`);
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen p-4 sm:p-8 flex justify-center bg-gray-100">

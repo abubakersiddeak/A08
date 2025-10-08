@@ -7,12 +7,14 @@ import TrendingApps from "./TrendingApps";
 
 export default function Hero() {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await fetch("/data.json");
         const resData = await res.json();
         setData(resData);
+        setLoading(false);
       } catch (error) {
         console.error("Fetch Error:", error);
       }
@@ -20,6 +22,13 @@ export default function Hero() {
 
     fetchData();
   }, []);
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-600"></div>
+      </div>
+    );
+  }
 
   return (
     <>
