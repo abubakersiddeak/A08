@@ -4,6 +4,7 @@ import googleplayIcon from "../assets/google-play_6124997.png";
 import appstoreIcon from "../assets/app-store_5977575.png";
 import TrustSection from "./TrustSection";
 import TrendingApps from "./TrendingApps";
+import { Link } from "react-router";
 
 export default function Hero() {
   const [data, setData] = useState([]);
@@ -43,18 +44,24 @@ export default function Hero() {
           into digital experiences that truly make an impact.
         </div>
         <div className="flex justify-center items-center gap-4">
-          <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl">
+          <Link
+            to="https://play.google.com"
+            className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl"
+          >
             <img
               className="h-5 w-5"
               src={googleplayIcon}
               alt="googleplayIcon"
             />{" "}
             Google Play
-          </button>
-          <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl">
+          </Link>
+          <Link
+            to="https://www.apple.com/app-store/"
+            className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl"
+          >
             <img className="h-5 w-5" src={appstoreIcon} alt="appstoreIcon" />{" "}
             App Store
-          </button>
+          </Link>
         </div>
 
         <img src={bennerImg} alt="banner-img" className="w-75 md:w-155"></img>

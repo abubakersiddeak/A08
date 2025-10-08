@@ -83,7 +83,7 @@ export default function AllApps() {
           {filteredData.length > 0 ? (
             filteredData.map((d) => <AppCard key={d.id} data={d} />)
           ) : (
-            <p>No apps found</p>
+            <p className="text-center text-3xl font-extrabold">No apps found</p>
           )}
         </div>
       </div>
