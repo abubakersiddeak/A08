@@ -1,16 +1,26 @@
-# React + Vite
+## Description
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**All Apps Explorer** একটি React ভিত্তিক ওয়েব অ্যাপ যেখানে ব্যবহারকারীরা বিভিন্ন জনপ্রিয় অ্যাপের তথ্য দেখতে, সার্চ করতে এবং তাদের রেটিং বা ডাউনলোড পরিসংখ্যান জানতে পারেন।  
+এই প্রজেক্টে একটি **ডাইনামিক সার্চ সিস্টেম**, **লোডিং অ্যানিমেশন**, এবং **অ্যাপ কার্ড প্রদর্শন ব্যবস্থা** রয়েছে।  
+প্রতিটি অ্যাপে নাম, কোম্পানি, রেটিং, রিভিউ সংখ্যা, ডাউনলোড সংখ্যা, এবং বিস্তারিত বর্ণনা দেওয়া আছে।
 
-Currently, two official plugins are available:
+## Technologies Used
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+| Technology             | Purpose                                             |
+| ---------------------- | --------------------------------------------------- |
+| **React.js**           | Frontend UI তৈরির জন্য                              |
+| **Tailwind CSS**       | সুন্দর ও রেস্পনসিভ ডিজাইন তৈরির জন্য                |
+| **Lucide React Icons** | আইকন ব্যবহারের জন্য                                 |
+| **Recharts**           | রেটিং ডেটা ভিজুয়ালাইজেশনের জন্য (বার চার্ট ইত্যাদি) |
+| **React Router DOM**   | ডাইনামিক রাউটিংয়ের জন্য                             |
 
-## React Compiler
+|
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- 🔍 রিয়েল-টাইম সার্চ ফাংশন
+- 🌀 লোডিং স্পিনার যুক্ত ডেটা ফেচিং সিস্টেম
+- 📱 সম্পূর্ণ রেস্পনসিভ ডিজাইন
+- 📊 প্রতিটি অ্যাপের ডাউনলোড, রেটিং এবং রিভিউ তথ্য
+- ❌ "App Not Found" এর জন্য কাস্টম এরর পেজ
+- 💾 ডেটা লোড হয় `data.json` ফাইল থেকে
